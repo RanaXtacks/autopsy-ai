@@ -4,6 +4,7 @@ FROM python:3.10-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV FLASK_ENV=production
 
 # Set work directory
 WORKDIR /app
@@ -23,5 +24,5 @@ COPY . .
 # Expose port
 EXPOSE 5000
 
-# Run the application
-CMD ["python", "run.py"]
+# Run Gunicorn for production
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--threads", "2", "--timeout", "120", "wsgi:app"]
