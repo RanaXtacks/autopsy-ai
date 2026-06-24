@@ -1,5 +1,6 @@
 import logging
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from app.services.report_service import ReportService
 
 logger = logging.getLogger(__name__)
@@ -9,6 +10,7 @@ report_service = ReportService()
 
 
 @reports_bp.route('', methods=['POST'])
+@jwt_required()
 def create_report():
     try:
         data = request.get_json()
@@ -34,6 +36,7 @@ def create_report():
 
 
 @reports_bp.route('', methods=['GET'])
+@jwt_required()
 def get_reports():
     try:
         page = request.args.get('page', 1, type=int)
@@ -58,6 +61,7 @@ def get_reports():
 
 
 @reports_bp.route('/<int:report_id>', methods=['GET'])
+@jwt_required()
 def get_report(report_id):
     try:
         report = report_service.get_report_by_id(report_id)

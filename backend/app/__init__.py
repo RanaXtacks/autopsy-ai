@@ -23,9 +23,13 @@ def create_app(config_name=None):
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    
+    from app.auth.jwt_manager import configure_jwt
+    configure_jwt(jwt)
+    
     CORS(app)
 
-    from app.routes.auth import auth_bp
+    from app.auth.routes import auth_bp
     from app.routes.analytics import analytics_bp
     from app.routes.health import health_bp
     from app.routes.users import users_bp

@@ -1,5 +1,6 @@
 import logging
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from app.services.upload_service import UploadService
 
 logger = logging.getLogger(__name__)
@@ -9,6 +10,7 @@ upload_service = UploadService()
 
 
 @uploads_bp.route('', methods=['POST'])
+@jwt_required()
 def create_upload():
     try:
         data = request.get_json()
@@ -35,6 +37,7 @@ def create_upload():
 
 
 @uploads_bp.route('', methods=['GET'])
+@jwt_required()
 def get_uploads():
     try:
         page = request.args.get('page', 1, type=int)
@@ -59,6 +62,7 @@ def get_uploads():
 
 
 @uploads_bp.route('/<int:upload_id>', methods=['GET'])
+@jwt_required()
 def get_upload(upload_id):
     try:
         upload = upload_service.get_upload_by_id(upload_id)
