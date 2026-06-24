@@ -14,6 +14,10 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=int(os.environ.get('JWT_ACCESS_EXPIRES', 60)))
     JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.environ.get('JWT_REFRESH_EXPIRES', 30)))
     LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+    
+    # Upload Settings
+    UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'storage/uploads')
+    MAX_CONTENT_LENGTH = int(os.environ.get('MAX_CONTENT_LENGTH', 10 * 1024 * 1024)) # 10 MB default
 
 
 class DevelopmentConfig(Config):

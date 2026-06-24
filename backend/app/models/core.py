@@ -42,16 +42,18 @@ class Upload(db.Model, TimestampMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
-    file_name = db.Column(db.String(255), nullable=False, index=True)
-    file_type = db.Column(db.String(50), nullable=False)
+    original_filename = db.Column(db.String(255), nullable=False, index=True)
+    stored_filename = db.Column(db.String(255), nullable=False, unique=True, index=True)
+    mime_type = db.Column(db.String(100), nullable=False)
     file_size = db.Column(db.BigInteger, nullable=False)  # in bytes
     upload_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
-    processing_status = db.Column(
-        db.Enum('pending', 'processing', 'completed', 'failed', name='processing_status_enum'),
+    status = db.Column(
+        db.Enum('uploaded', 'processing', 'completed', 'failed', name='upload_status_enum'),
         nullable=False,
-        default='pending',
+        default='uploaded',
         index=True
     )
+    upload_source = db.Column(db.String(50), nullable=False, default='web')
     
     # Relationships
     user = db.relationship('User', back_populates='uploads')
@@ -60,11 +62,13 @@ class Upload(db.Model, TimestampMixin):
         return {
             'id': self.id,
             'user_id': self.user_id,
-            'file_name': self.file_name,
-            'file_type': self.file_type,
+            'original_filename': self.original_filename,
+            'stored_filename': self.stored_filename,
+            'mime_type': self.mime_type,
             'file_size': self.file_size,
             'upload_date': self.upload_date.isoformat() if self.upload_date else None,
-            'processing_status': self.processing_status,
+            'status': self.status,
+            'upload_source': self.upload_source,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
         }
