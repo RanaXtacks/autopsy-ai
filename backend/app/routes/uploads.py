@@ -2,6 +2,7 @@ import logging
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.upload_service import UploadService
+from app.data_pipeline.services.ingestion_service import IngestionService
 
 logger = logging.getLogger(__name__)
 
@@ -95,3 +96,52 @@ def delete_upload(upload_id):
     except Exception as e:
         logger.error(f'Error deleting upload: {str(e)}')
         return jsonify({'error': 'Internal server error deleting upload'}), 500
+        
+        
+@uploads_bp.route('/<int:upload_id>/process', methods=['POST'])
+@jwt_required()
+def process_upload(upload_id):
+    try:
+        current_user_id = int(get_jwt_identity())
+        
+        data = request.get_json()
+        if not data or 'source' not in data:
+            return jsonify({'error': 'Missing source parameter (chrome, github, screentime, spotify)'}), 400
+            
+        source = data['source']
+        
+        from flask import current_app
+        upload_folder = current_app.config['UPLOAD_FOLDER']
+        
+        # Process synchronously for V1
+        result = IngestionService.process_upload(upload_id, current_user_id, source, upload_folder)
+        
+        if not result['success']:
+            if 'not found' in result['message'].lower():
+                return jsonify({'error': result['message']}), 404
+            return jsonify({'error': result['message']}), 400
+            
+        return jsonify(result)
+        
+    except Exception as e:
+        logger.error(f'Error processing upload: {str(e)}')
+        return jsonify({'error': 'Internal server error during processing'}), 500
+
+
+@uploads_bp.route('/<int:upload_id>/status', methods=['GET'])
+@jwt_required()
+def get_upload_status(upload_id):
+    try:
+        current_user_id = int(get_jwt_identity())
+        upload = upload_service.get_upload_by_id(upload_id)
+        
+        if not upload or upload.user_id != current_user_id:
+            return jsonify({'error': 'Upload not found or forbidden access'}), 404
+            
+        return jsonify({
+            'id': upload.id,
+            'status': upload.status
+        })
+    except Exception as e:
+        logger.error(f'Error getting upload status: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
