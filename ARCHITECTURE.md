@@ -26,6 +26,7 @@ Autopsy AI follows a decoupled client-server architecture, optimized for scalabi
     - Integrated into the Flask backend.
     - Processes raw user data (e.g., browser history, app usage logs) to extract meaningful patterns.
     - **Session Detection Engine:** Uses a strategy pattern (currently `RuleBasedClassifier`) to group raw events into semantic sessions (e.g., "Deep Work", "Entertainment"). This is designed to be easily swappable with ML models in the future without changing the API contract.
+    - **Productivity Scoring Engine:** Pipeline of sub-engines (Focus, Consistency, Discipline) that evaluate `BehaviorSession` groupings and output quantitative normalized scores (0-100). Includes an `InsightEngine` for generating NLP-like behavioral analysis.
 
 ## Data Flow
 
