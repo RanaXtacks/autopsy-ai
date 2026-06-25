@@ -7,7 +7,9 @@ import {
   Shield, 
   Brain,
   Menu,
-  X
+  X,
+  Clock,
+  Activity
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -26,14 +28,19 @@ const Sidebar = () => {
       icon: Upload 
     },
     { 
+      path: '/sessions', 
+      label: 'Sessions', 
+      icon: Clock 
+    },
+    { 
+      path: '/productivity', 
+      label: 'Productivity', 
+      icon: Activity 
+    },
+    { 
       path: '/reports', 
       label: 'Reports', 
       icon: FileText 
-    },
-    { 
-      path: '/sessions', 
-      label: 'Sessions', 
-      icon: Brain 
     },
     { 
       path: '/settings', 
