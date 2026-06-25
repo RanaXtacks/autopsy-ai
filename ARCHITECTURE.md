@@ -22,9 +22,10 @@ Autopsy AI follows a decoupled client-server architecture, optimized for scalabi
     - Relational database for storing user profiles, metadata, and processed insights.
     - Optimized for high-read/write performance.
 
-4.  **Analytics Engine (Pandas):**
+4.  **Analytics Engine (Pandas / AI Engine):**
     - Integrated into the Flask backend.
     - Processes raw user data (e.g., browser history, app usage logs) to extract meaningful patterns.
+    - **Session Detection Engine:** Uses a strategy pattern (currently `RuleBasedClassifier`) to group raw events into semantic sessions (e.g., "Deep Work", "Entertainment"). This is designed to be easily swappable with ML models in the future without changing the API contract.
 
 ## Data Flow
 

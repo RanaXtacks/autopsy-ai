@@ -14,6 +14,7 @@
 - [ ] Define privacy-first data handling policies.
 
 ## Phase 3: Advanced Behavioral Insights
+- [x] Implement Session Detection Engine to group events into behavioral sessions (Deep Work, Entertainment, etc.).
 - [ ] Implement pattern recognition algorithms (e.g., usage trends, anomaly detection).
 - [ ] Add support for more data sources (social media exports, app usage).
 - [ ] Enhance UI/UX for better data storytelling.
