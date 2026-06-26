@@ -16,7 +16,7 @@
 ## Phase 3: Advanced Behavioral Insights
 - [x] Implement Session Detection Engine to group events into behavioral sessions (Deep Work, Entertainment, etc.).
 - [x] Implement Productivity Scoring Engine to quantify focus, consistency, and discipline.
-- [ ] Implement pattern recognition algorithms (e.g., usage trends, anomaly detection).
+- [x] Implement Habit Detection Engine (Pattern mining, triggers, confidence scoring).
 - [ ] Add support for more data sources (social media exports, app usage).
 - [ ] Enhance UI/UX for better data storytelling.
 - [ ] Integrate local-first processing options.
