@@ -7,5 +7,6 @@ from .habits import Habit
 from .correlations import BehaviorCorrelation
 from .procrastination import ProcrastinationPattern
 from .burnout import BurnoutAssessment
+from .predictions import FocusPrediction
 
-__all__ = ['TimestampMixin', 'User', 'Upload', 'Report', 'TokenBlocklist', 'BehaviorEvent', 'BehaviorSession', 'ProductivityScore', 'Habit', 'BehaviorCorrelation', 'ProcrastinationPattern', 'BurnoutAssessment']
+__all__ = ['TimestampMixin', 'User', 'Upload', 'Report', 'TokenBlocklist', 'BehaviorEvent', 'BehaviorSession', 'ProductivityScore', 'Habit', 'BehaviorCorrelation', 'ProcrastinationPattern', 'BurnoutAssessment', 'FocusPrediction']
