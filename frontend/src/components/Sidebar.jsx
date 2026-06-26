@@ -13,7 +13,8 @@ import {
   Target,
   Network,
   AlertCircle,
-  Flame
+  Flame,
+  Calendar
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -60,6 +61,11 @@ const Sidebar = () => {
       path: '/burnout', 
       label: 'Burnout Risk', 
       icon: Flame 
+    },
+    { 
+      path: '/predictions', 
+      label: 'Predictive Schedule', 
+      icon: Calendar 
     },
     { 
       path: '/reports', 

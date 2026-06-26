@@ -10,6 +10,7 @@ import Habits from './pages/Habits'
 import Correlations from './pages/Correlations'
 import Procrastination from './pages/Procrastination'
 import Burnout from './pages/Burnout'
+import PredictionDashboard from './pages/PredictionDashboard'
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/correlations" element={<Correlations />} />
           <Route path="/procrastination" element={<Procrastination />} />
           <Route path="/burnout" element={<Burnout />} />
+          <Route path="/predictions" element={<PredictionDashboard />} />
         </Route>
       </Routes>
     </Router>
