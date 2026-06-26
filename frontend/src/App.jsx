@@ -7,6 +7,7 @@ import Settings from './pages/Settings'
 import Sessions from './pages/Sessions'
 import Productivity from './pages/Productivity'
 import Habits from './pages/Habits'
+import Correlations from './pages/Correlations'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/sessions" element={<Sessions />} />
           <Route path="/productivity" element={<Productivity />} />
           <Route path="/habits" element={<Habits />} />
+          <Route path="/correlations" element={<Correlations />} />
         </Route>
       </Routes>
     </Router>

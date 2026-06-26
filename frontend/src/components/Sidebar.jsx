@@ -10,7 +10,8 @@ import {
   X,
   Clock,
   Activity,
-  Target
+  Target,
+  Network
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -42,6 +43,11 @@ const Sidebar = () => {
       path: '/habits', 
       label: 'Habits', 
       icon: Target 
+    },
+    { 
+      path: '/correlations', 
+      label: 'Intelligence', 
+      icon: Network 
     },
     { 
       path: '/reports', 
