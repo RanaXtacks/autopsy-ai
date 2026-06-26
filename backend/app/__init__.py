@@ -40,6 +40,7 @@ def create_app(config_name=None):
     from app.routes.scores import scores_bp
     from app.routes.habits import habits_bp
     from app.routes.correlations import correlations_bp
+    from app.routes.procrastination import procrastination_bp
 
     app.register_blueprint(health_bp)
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -52,6 +53,7 @@ def create_app(config_name=None):
     app.register_blueprint(scores_bp, url_prefix='/api/scores')
     app.register_blueprint(habits_bp, url_prefix='/api/habits')
     app.register_blueprint(correlations_bp, url_prefix='/api/correlations')
+    app.register_blueprint(procrastination_bp, url_prefix='/api/procrastination')
 
     @app.errorhandler(400)
     def bad_request(error):
