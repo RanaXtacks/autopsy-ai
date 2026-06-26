@@ -26,6 +26,7 @@ class User(db.Model, TimestampMixin):
     habits = db.relationship('Habit', backref='user', lazy=True, cascade="all, delete-orphan")
     correlations = db.relationship('BehaviorCorrelation', backref='user', lazy=True, cascade="all, delete-orphan")
     procrastination_patterns = db.relationship('ProcrastinationPattern', backref='user', lazy=True, cascade="all, delete-orphan")
+    burnout_assessments = db.relationship('BurnoutAssessment', backref='user', lazy=True, cascade="all, delete-orphan")
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
