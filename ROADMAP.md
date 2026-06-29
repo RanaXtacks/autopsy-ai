@@ -22,6 +22,7 @@
 - [x] Implement Burnout Risk Engine (Predictive cognitive overload detection).
 - [x] Implement Productivity Forecasting Engine (Forecast productivity scores using historical trajectory and momentum).
 - [x] Implement Behavioral Trajectory & Goal Engine (Detect macro shifts, track dynamic goals, forecast consistency).
+- [x] Implement Periodic Intelligence & Comparative Analytics Engine (Weekly/Monthly summaries, baseline shifts, delta tracking).
 - [ ] Add support for more data sources (social media exports, app usage).
 - [ ] Enhance UI/UX for better data storytelling.
 - [ ] Integrate local-first processing options.
