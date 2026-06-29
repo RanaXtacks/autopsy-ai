@@ -1,18 +1,23 @@
+from typing import Dict, Any
+
 class CourseCorrectionGenerator:
-    def __init__(self):
-        pass
-
-    def generate_correction(self, trajectory_status, trend_data, goal_data, deficit=0):
-        if trajectory_status == "On Track":
-            return "Keep it up. No course correction needed."
-
-        trend_type = trend_data.get("trend_type", "")
-        
-        if "Chronotype Shift" in trend_type:
-            if goal_data.get("goal_type") == "Weekly Deep Work":
-                return f"Re-establish 9 AM coding block to recover {deficit:.1f} hours."
-                
-        if "Dopamine Loop" in trend_type:
-            return "Block distracting sites during work hours. You are context switching too often."
+    """
+    Provides AI recommendations to fix failing goals and course-correct.
+    Designed to be queried directly as a tool by future AI Investigators.
+    """
+    
+    def generate_correction(self, goal_status: str, deficit: float, macro_trends: list) -> Dict[str, Any]:
+        if goal_status == "On Track":
+            return {"action": "maintain", "message": "You are on track. Keep it up!"}
             
-        return "Increase daily output slightly to get back on track."
+        # Example heuristic based on deficit
+        if deficit > 5.0:
+            return {
+                "action": "drastic_correction",
+                "message": f"Re-establish a strict morning block to recover {deficit:.1f} hours of deep work."
+            }
+        else:
+            return {
+                "action": "minor_correction",
+                "message": f"You are slightly behind. Add an extra 30 minutes to your next session to recover {deficit:.1f} hours."
+            }

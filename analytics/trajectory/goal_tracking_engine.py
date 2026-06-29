@@ -1,40 +1,31 @@
+from typing import Dict, Any
+
 class GoalTrackingEngine:
-    def __init__(self):
-        pass
-
-    def calculate_trajectory(self, target_value, time_frame, current_value, days_elapsed, total_days):
-        if total_days == 0 or days_elapsed == 0:
-            return {
-                "required_run_rate": 0,
-                "current_run_rate": 0,
-                "projected_final_value": 0,
-                "status": "On Track",
-                "deficit": 0
-            }
-
-        current_run_rate = current_value / days_elapsed
-        remaining_value = target_value - current_value
-        days_remaining = total_days - days_elapsed
-        
-        if days_remaining > 0:
-            required_run_rate = remaining_value / days_remaining
-        else:
-            required_run_rate = 0 if remaining_value <= 0 else remaining_value
+    """
+    Tracks dynamic goals and calculates required run-rates vs actual run-rates.
+    """
+    
+    def calculate_run_rate(self, current_progress: float, target: float, days_passed: int, total_days: int) -> Dict[str, Any]:
+        if days_passed == 0 or total_days == 0:
+            return {"status": "Unknown", "projected": 0.0, "required_daily": 0.0}
             
-        projected_final_value = current_value + (current_run_rate * days_remaining)
-        deficit = target_value - projected_final_value
-
-        if projected_final_value >= target_value:
-            status = "On Track"
-        elif projected_final_value >= target_value * 0.9:
+        current_daily_rate = current_progress / days_passed
+        projected_total = current_daily_rate * total_days
+        
+        days_remaining = total_days - days_passed
+        remaining_target = max(0, target - current_progress)
+        required_daily_rate = remaining_target / days_remaining if days_remaining > 0 else 0
+        
+        status = "On Track"
+        if projected_total < target * 0.9:
             status = "At Risk"
-        else:
+        if projected_total < target * 0.7:
             status = "Failing"
-
+            
         return {
-            "required_run_rate_per_day": required_run_rate,
-            "current_run_rate_per_day": current_run_rate,
-            "projected_final_value": projected_final_value,
             "status": status,
-            "deficit": deficit if deficit > 0 else 0
+            "projected": projected_total,
+            "required_daily_rate": required_daily_rate,
+            "current_daily_rate": current_daily_rate,
+            "deficit": max(0, target - projected_total)
         }
