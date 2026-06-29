@@ -1,8 +1,30 @@
 import { Settings, User, Bell, Shield, Database, Palette } from 'lucide-react'
 import Card from '../components/Card'
 import Button from '../components/Button'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const SettingsPage = () => {
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportData = async () => {
+    setIsExporting(true);
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/export/data');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'autopsy_ai_export.json';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export failed", error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -104,6 +126,29 @@ const SettingsPage = () => {
                 <div className="w-12 h-6 bg-slate-300 rounded-full relative cursor-pointer">
                   <div className="w-4 h-4 bg-white rounded-full absolute left-1 top-1"></div>
                 </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center">
+                <Database size={24} />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900">Data Export</h3>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <p className="font-medium text-slate-900">Download Autopsy AI Dataset</p>
+                <p className="text-sm text-slate-500 mb-4">Export all your personal benchmarks, risks, and trajectories in JSON format.</p>
+                <button 
+                  onClick={handleExportData}
+                  disabled={isExporting}
+                  className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded transition flex items-center gap-2 font-medium disabled:opacity-50"
+                >
+                  {isExporting ? 'Exporting...' : 'Export Data'}
+                </button>
               </div>
             </div>
           </Card>

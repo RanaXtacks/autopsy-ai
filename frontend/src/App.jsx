@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
+import ErrorBoundary from './components/ErrorBoundary'
 import Dashboard from './pages/Dashboard'
 import Upload from './pages/Upload'
 import Reports from './pages/Reports'
@@ -13,22 +14,24 @@ import Burnout from './pages/Burnout'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="/upload" element={<Upload />} />
-          <Route path="/reports" element={<Reports />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/sessions" element={<Sessions />} />
-          <Route path="/productivity" element={<Productivity />} />
-          <Route path="/habits" element={<Habits />} />
-          <Route path="/correlations" element={<Correlations />} />
-          <Route path="/procrastination" element={<Procrastination />} />
-          <Route path="/burnout" element={<Burnout />} />
-        </Route>
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/sessions" element={<Sessions />} />
+            <Route path="/productivity" element={<Productivity />} />
+            <Route path="/habits" element={<Habits />} />
+            <Route path="/correlations" element={<Correlations />} />
+            <Route path="/procrastination" element={<Procrastination />} />
+            <Route path="/burnout" element={<Burnout />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   )
 }
 
