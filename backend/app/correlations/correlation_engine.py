@@ -1,5 +1,5 @@
 from typing import List
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from app.models.scores import ProductivityScore
 from app.models.correlations import BehaviorCorrelation
 from .feature_builder import FeatureBuilder

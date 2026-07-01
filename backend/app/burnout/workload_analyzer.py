@@ -1,5 +1,5 @@
 from typing import List
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 
 class WorkloadAnalyzer:
     """Analyzes deep work volume vs baseline to detect overload."""

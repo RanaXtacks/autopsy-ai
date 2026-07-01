@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { RefreshCw, Target, Zap, Clock, TrendingUp } from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -8,34 +9,11 @@ import TrendChart from '../components/widgets/TrendChart';
 import InsightsList from '../components/widgets/InsightsList';
 
 const Productivity = () => {
-  const [loading, setLoading] = useState(true);
+  const { globalState, loading } = useIntelligence();
   const [generating, setGenerating] = useState(false);
-  const [todayData, setTodayData] = useState(null);
-  const [historyData, setHistoryData] = useState([]);
 
-  const fetchScores = async () => {
-    try {
-      setLoading(true);
-      const token = localStorage.getItem('token');
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-      const [todayRes, historyRes] = await Promise.all([
-        axios.get('/api/scores/today', { headers }),
-        axios.get('/api/scores/history?days=30', { headers })
-      ]);
-
-      setTodayData(todayRes.data);
-      setHistoryData(historyRes.data);
-    } catch (err) {
-      console.error('Error fetching scores:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchScores();
-  }, []);
+  const todayData = globalState?.productivity_today || null;
+  const historyData = globalState?.productivity_history || [];
 
   const handleGenerate = async () => {
     try {
@@ -44,7 +22,8 @@ const Productivity = () => {
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       
       await axios.post('/api/scores/generate', {}, { headers });
-      await fetchScores();
+      alert('Scores generated successfully. Refreshing global state...');
+      window.location.reload();
     } catch (err) {
       console.error('Error generating scores:', err);
       alert('Failed to generate scores');

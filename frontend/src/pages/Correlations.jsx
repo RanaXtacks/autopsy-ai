@@ -1,26 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { Network } from 'lucide-react';
 import CorrelationList from '../components/widgets/CorrelationList';
 import TrendRadar from '../components/widgets/TrendRadar';
 
 const Correlations = () => {
-  const [correlations, setCorrelations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { globalState, loading: contextLoading } = useIntelligence();
+  const [loading, setLoading] = useState(false);
 
-  const fetchCorrelations = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get('/api/correlations', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setCorrelations(res.data.correlations);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const correlations = globalState?.correlations || [];
 
   const generateCorrelations = async () => {
     setLoading(true);
@@ -29,18 +18,15 @@ const Correlations = () => {
       await axios.post('/api/correlations/generate', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      await fetchCorrelations();
+      alert('Connections analyzed successfully. Refreshing global state...');
+      window.location.reload();
     } catch (err) {
       console.error(err);
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchCorrelations();
-  }, []);
-
-  if (loading) return <div className="text-white p-6">Computing behavior correlations...</div>;
+  if (contextLoading || loading) return <div className="text-white p-6">Computing behavior correlations...</div>;
 
   const positiveCorrelations = correlations.filter(c => c.relationship_type.includes('Positive'));
   const negativeCorrelations = correlations.filter(c => c.relationship_type.includes('Negative'));

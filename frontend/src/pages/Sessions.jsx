@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { RefreshCw, AlertCircle } from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -8,38 +9,12 @@ import SessionTimeline from '../components/widgets/SessionTimeline';
 import ActivityDistribution from '../components/widgets/ActivityDistribution';
 
 const Sessions = () => {
-  const [loading, setLoading] = useState(true);
+  const { globalState, loading, error } = useIntelligence();
   const [generating, setGenerating] = useState(false);
-  const [error, setError] = useState(null);
-  const [summary, setSummary] = useState(null);
-  const [sessions, setSessions] = useState([]);
 
-  const fetchSessionData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const token = localStorage.getItem('token');
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-      const [summaryRes, sessionsRes] = await Promise.all([
-        axios.get('/api/sessions/summary', { headers }),
-        axios.get('/api/sessions?per_page=50', { headers }) // get up to 50 for timeline
-      ]);
-
-      setSummary(summaryRes.data);
-      setSessions(sessionsRes.data.sessions);
-    } catch (err) {
-      console.error('Error fetching session data:', err);
-      setError('Failed to load session data.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSessionData();
-  }, []);
+  // Destructure from global state or provide fallbacks
+  const summary = globalState?.session_summary || null;
+  const sessions = globalState?.recent_sessions || [];
 
   const handleGenerateSessions = async () => {
     try {
@@ -48,7 +23,9 @@ const Sessions = () => {
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       
       await axios.post('/api/sessions/generate', {}, { headers });
-      await fetchSessionData();
+      // In a real app we'd refresh the global state here, but for now we alert success
+      alert('Sessions generated successfully. Refreshing global state...');
+      window.location.reload();
     } catch (err) {
       console.error('Error generating sessions:', err);
       alert('Failed to generate sessions');

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { Brain, Database, FileText, Clock, AlertCircle } from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -11,8 +11,7 @@ import ActivityHeatmap from '../components/widgets/ActivityHeatmap';
 import InsightsPanel from '../components/widgets/InsightsPanel';
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { globalState, loading, error } = useIntelligence();
   const [summary, setSummary] = useState(null);
   const [timeline, setTimeline] = useState(null);
   const [heatmap, setHeatmap] = useState(null);
@@ -20,36 +19,36 @@ const Dashboard = () => {
   const [period, setPeriod] = useState('daily');
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Use token if available, otherwise just make the request (might fail if protected)
-        const token = localStorage.getItem('token');
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    if (globalState) {
+      const data = globalState;
+      setSummary({
+        average_daily_activity: data.focus_average || 0,
+        most_active_hour: '--',
+        most_active_day: '--',
+        least_active_hour: '--',
+        categories_percentage: {}
+      });
+      
+      setTimeline(data.timeline || []);
+      setHeatmap(data.heatmap || { x: [], y: [], z: [] });
 
-        const [summaryRes, timelineRes, heatmapRes, insightsRes] = await Promise.all([
-          axios.get('/api/analytics/summary', { headers }),
-          axios.get(`/api/analytics/timeline?period=${period}`, { headers }),
-          axios.get('/api/analytics/heatmap', { headers }),
-          axios.get('/api/analytics/insights', { headers })
-        ]);
-
-        setSummary(summaryRes.data);
-        setTimeline(timelineRes.data.timeline);
-        setHeatmap(heatmapRes.data);
-        setInsights(insightsRes.data.insights);
-      } catch (err) {
-        console.error('Error fetching dashboard data:', err);
-        setError('Failed to load dashboard data. Please try again.');
-      } finally {
-        setLoading(false);
+      const newInsights = [];
+      if (data.archetype) {
+        newInsights.push({ type: 'behavior', text: `Primary Archetype: ${data.archetype.primary}` });
+        newInsights.push({ type: 'routine', text: `Risk Profile: ${data.archetype.risk_profile}` });
       }
-    };
-
-    fetchDashboardData();
-  }, [period]);
+      if (data.segmentation) {
+        newInsights.push({ type: 'summary', text: data.segmentation });
+      }
+      if (data.prescriptions && data.prescriptions.length > 0) {
+        data.prescriptions.forEach(p => {
+          newInsights.push({ type: 'productivity', text: `Prescription: ${p}` });
+        });
+      }
+      
+      setInsights(newInsights);
+    }
+  }, [globalState]);
 
   if (loading) {
     return (

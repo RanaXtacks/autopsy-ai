@@ -2,7 +2,7 @@ import json
 from typing import List, Dict, Any
 from datetime import datetime, timedelta
 from app import db
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from app.models.scores import ProductivityScore
 from app.models.procrastination import ProcrastinationPattern
 from app.models.burnout import BurnoutAssessment

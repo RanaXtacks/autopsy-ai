@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
-import ErrorBoundary from './components/ErrorBoundary'
+import { IntelligenceProvider } from './context/IntelligenceContext'
 import Dashboard from './pages/Dashboard'
 import Upload from './pages/Upload'
 import Reports from './pages/Reports'
@@ -14,7 +14,7 @@ import Burnout from './pages/Burnout'
 
 function App() {
   return (
-    <ErrorBoundary>
+    <IntelligenceProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -31,7 +31,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
-    </ErrorBoundary>
+    </IntelligenceProvider>
   )
 }
 

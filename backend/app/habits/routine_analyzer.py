@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Any
 import numpy as np
 
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from .habit_types import MIN_SESSIONS_FOR_ROUTINE, HabitCategory
 
 class RoutineAnalyzer:

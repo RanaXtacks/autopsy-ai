@@ -1,7 +1,10 @@
 from typing import Dict, Any
 from .payload_optimizer import PayloadOptimizer
 from .caching_strategy import CachingStrategy
+# pyrefly: ignore [missing-import]
+from fastapi import APIRouter
 
+router = APIRouter()
 class IntelligenceLayerV1:
     """
     The God-Endpoint orchestration layer.
@@ -44,3 +47,10 @@ class IntelligenceLayerV1:
         self.caching.set(cache_key, optimized_payload)
         
         return optimized_payload
+
+# Create a singleton instance to serve requests
+layer = IntelligenceLayerV1()
+
+@router.get("/state")
+async def get_state(user_id: int = 1):
+    return layer.get_unified_state(user_id)

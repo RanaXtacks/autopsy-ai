@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { RefreshCw } from 'lucide-react';
 import TopHabits from '../components/widgets/TopHabits';
 import TriggerMap from '../components/widgets/TriggerMap';
 import RoutineMap from '../components/widgets/RoutineMap';
 
 const Habits = () => {
-  const [summary, setSummary] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { globalState, loading: contextLoading } = useIntelligence();
+  const [loading, setLoading] = useState(false);
 
-  const fetchHabits = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get('/api/habits/summary', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setSummary(res.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const summary = globalState?.habits_summary || null;
 
   const generateHabits = async () => {
     setLoading(true);
@@ -30,18 +19,15 @@ const Habits = () => {
       await axios.post('/api/habits/generate', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      await fetchHabits();
+      alert('Habits scanned successfully. Refreshing global state...');
+      window.location.reload();
     } catch (err) {
       console.error(err);
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchHabits();
-  }, []);
-
-  if (loading) return <div className="text-white p-6">Loading habit intelligence...</div>;
+  if (contextLoading || loading) return <div className="text-white p-6">Loading habit intelligence...</div>;
 
   return (
     <div className="p-6 text-white space-y-6">

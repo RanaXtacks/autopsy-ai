@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { Flame } from 'lucide-react';
 import RiskGauge from '../components/widgets/RiskGauge';
 import RiskFactorsList from '../components/widgets/RiskFactorsList';
@@ -7,31 +8,11 @@ import ActionPlan from '../components/widgets/ActionPlan';
 import BurnoutTrendChart from '../components/widgets/BurnoutTrendChart';
 
 const Burnout = () => {
-  const [assessment, setAssessment] = useState(null);
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { globalState, loading: contextLoading } = useIntelligence();
+  const [loading, setLoading] = useState(false);
 
-  const fetchDashboardData = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
-      
-      const [currentRes, historyRes] = await Promise.all([
-        axios.get('/api/burnout/current', { headers }),
-        axios.get('/api/burnout/history', { headers })
-      ]);
-      
-      setAssessment(currentRes.data);
-      setHistory(historyRes.data.history);
-    } catch (err) {
-      if (err.response && err.response.status === 404) {
-        setAssessment(null);
-      }
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const assessment = globalState?.burnout_assessment || null;
+  const history = globalState?.burnout_history || [];
 
   const generateAssessment = async () => {
     setLoading(true);
@@ -40,18 +21,15 @@ const Burnout = () => {
       await axios.post('/api/burnout/generate', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      await fetchDashboardData();
+      alert('Risk assessed successfully. Refreshing global state...');
+      window.location.reload();
     } catch (err) {
       console.error(err);
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  if (loading) return <div className="text-white p-6">Analyzing burnout signals...</div>;
+  if (contextLoading || loading) return <div className="text-white p-6">Analyzing burnout signals...</div>;
 
   return (
     <div className="p-6 text-white space-y-6">

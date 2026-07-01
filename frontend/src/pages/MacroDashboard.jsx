@@ -1,37 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { Target, Activity, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
 const MacroDashboard = () => {
-  const [trajectory, setTrajectory] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { globalState, loading: contextLoading } = useIntelligence();
 
-  // Mocking the fetch for presentation purposes
-  const fetchDashboardData = async () => {
-    try {
-      // Simulate API call
-      setTimeout(() => {
-        setTrajectory({
-          goal: "15h Weekly Deep Work",
-          status: "At Risk",
-          projected: "12h",
-          trendDetected: "Morning focus dropping, shifting to low-quality evening work.",
-          courseCorrection: "Re-establish 9 AM coding block to recover 3 hours.",
-          consistencyProb: 85
-        });
-        setLoading(false);
-      }, 800);
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
+  // Map trajectory from global state or fallback to null
+  const trajectory = globalState?.trajectory || null;
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  if (loading) return <div className="text-white p-6">Analyzing macro trajectories...</div>;
+  if (contextLoading) return <div className="text-white p-6">Analyzing macro trajectories...</div>;
 
   return (
     <div className="p-6 text-white space-y-6">

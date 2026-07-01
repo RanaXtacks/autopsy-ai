@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 from app import db
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from app.models.procrastination import ProcrastinationPattern
 from app.procrastination.procrastination_detector import ProcrastinationDetector
 

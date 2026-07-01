@@ -1,5 +1,5 @@
 from typing import List
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from app.models.procrastination import ProcrastinationPattern
 from .distraction_analyzer import DistractionAnalyzer
 from .context_switch_analyzer import ContextSwitchAnalyzer

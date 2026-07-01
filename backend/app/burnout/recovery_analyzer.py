@@ -1,5 +1,5 @@
 from typing import List
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 
 class RecoveryAnalyzer:
     """Evaluates the presence of recovery activities."""

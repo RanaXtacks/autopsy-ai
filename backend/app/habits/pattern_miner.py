@@ -1,6 +1,6 @@
 from collections import defaultdict
 from typing import List, Dict, Any
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from .habit_types import MAX_GAP_FOR_SEQUENCE_MINUTES
 
 class PatternMiner:

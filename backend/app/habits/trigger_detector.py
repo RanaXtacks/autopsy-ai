@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from app.models.scores import ProductivityScore
 from datetime import timedelta
 

@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import { Settings, User, Bell, Shield, Database, Palette } from 'lucide-react'
 import Card from '../components/Card'
 import Button from '../components/Button'
 import LoadingSpinner from '../components/LoadingSpinner'
+import { useIntelligence } from '../context/IntelligenceContext'
 
 const SettingsPage = () => {
+  const { globalState } = useIntelligence();
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExportData = async () => {
@@ -77,7 +80,7 @@ const SettingsPage = () => {
                 </label>
                 <input
                   type="text"
-                  defaultValue="Autopsy AI User"
+                  defaultValue={globalState?.user?.name || "Autopsy AI User"}
                   className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
@@ -88,7 +91,7 @@ const SettingsPage = () => {
                 </label>
                 <input
                   type="email"
-                  defaultValue="user@autopsyai.local"
+                  defaultValue={globalState?.user?.email || "user@autopsyai.local"}
                   className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>

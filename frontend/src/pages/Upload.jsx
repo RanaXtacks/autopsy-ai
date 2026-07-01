@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import { Upload, FileText, CheckCircle, AlertCircle } from 'lucide-react'
 import Card from '../components/Card'
 import Button from '../components/Button'
@@ -14,17 +15,39 @@ const UploadPage = () => {
     setUploadStatus(null)
   }
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (files.length === 0) return
     
     setIsProcessing(true)
     setUploadStatus(null)
 
-    // Simulate upload/processing
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("file", file); // Backend expects "file"
+      });
+
+      const token = localStorage.getItem('token');
+      const headers = { 
+        'Content-Type': 'multipart/form-data',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+      };
+
+      const res = await axios.post('/api/v1/data/upload', formData, { headers });
+      
       setIsProcessing(false)
       setUploadStatus('success')
-    }, 2000)
+      
+      // Refresh global state so dashboard picks up new data
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (err) {
+      console.error(err);
+      setIsProcessing(false);
+      setUploadStatus('error');
+    }
   }
 
   return (

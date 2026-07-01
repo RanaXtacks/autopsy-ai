@@ -1,33 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { useIntelligence } from '../context/IntelligenceContext';
 import { AlertCircle } from 'lucide-react';
 import DistractionList from '../components/widgets/DistractionList';
 import TimeLossMetrics from '../components/widgets/TimeLossMetrics';
 import RecoverySuggestions from '../components/widgets/RecoverySuggestions';
 
 const Procrastination = () => {
-  const [patterns, setPatterns] = useState([]);
-  const [metrics, setMetrics] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { globalState, loading: contextLoading } = useIntelligence();
+  const [loading, setLoading] = useState(false);
 
-  const fetchDashboardData = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
-      
-      const [patternsRes, metricsRes] = await Promise.all([
-        axios.get('/api/procrastination', { headers }),
-        axios.get('/api/procrastination/lost-time', { headers })
-      ]);
-      
-      setPatterns(patternsRes.data.patterns);
-      setMetrics(metricsRes.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const patterns = globalState?.procrastination_patterns || [];
+  const metrics = globalState?.procrastination_metrics || null;
 
   const generatePatterns = async () => {
     setLoading(true);
@@ -36,18 +20,15 @@ const Procrastination = () => {
       await axios.post('/api/procrastination/generate', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      await fetchDashboardData();
+      alert('Behavior scanned successfully. Refreshing global state...');
+      window.location.reload();
     } catch (err) {
       console.error(err);
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  if (loading) return <div className="text-white p-6">Detecting behavioral patterns...</div>;
+  if (contextLoading || loading) return <div className="text-white p-6">Detecting behavioral patterns...</div>;
 
   return (
     <div className="p-6 text-white space-y-6">

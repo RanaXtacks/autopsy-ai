@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 from app import db
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from app.models.scores import ProductivityScore
 from app.models.correlations import BehaviorCorrelation
 from app.correlations.correlation_engine import CorrelationEngine

@@ -1,6 +1,6 @@
 from typing import List
 import json
-from app.models.analytics import BehaviorSession
+from app.models.sessions import BehaviorSession
 from app.models.scores import ProductivityScore
 from app.models.procrastination import ProcrastinationPattern
 from app.models.burnout import BurnoutAssessment

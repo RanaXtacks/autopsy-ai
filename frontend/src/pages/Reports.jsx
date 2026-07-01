@@ -11,12 +11,14 @@ import {
 import Card from '../components/Card'
 import Button from '../components/Button'
 import { useState } from 'react'
+import { useIntelligence } from '../context/IntelligenceContext'
 
 const Reports = () => {
+  const { globalState } = useIntelligence();
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('All')
 
-  const reports = [
+  const reports = globalState?.reports || [
     { 
       id: 1, 
       name: 'User Behavior Analysis Q2', 
@@ -138,17 +140,17 @@ const Reports = () => {
                 <div className="flex items-center gap-2">
                   {report.status === 'Completed' && (
                     <>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => alert('View report feature coming soon.')}>
                         <Eye size={16} className="mr-1" />
                         View
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => alert('Download report feature coming soon.')}>
                         <Download size={16} className="mr-1" />
                         Download
                       </Button>
                     </>
                   )}
-                  <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
+                  <Button variant="outline" size="sm" onClick={() => alert('Delete report feature coming soon.')} className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
                     <Trash2 size={16} />
                   </Button>
                 </div>
